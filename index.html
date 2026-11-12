@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="LUMAR Velas — Granada. Velas aromáticas artesanales de soja, hechas a mano en Granada." />
+  <title>LUMAR Velas — Granada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#tienda">Saltar al contenido</a>
+
+  <div class="top-banner" role="status">
+    Envío gratis en península a partir de 45€
+  </div>
+
+  <header class="site-header" id="inicio">
+    <div class="header-inner">
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Abrir menú">
+        <span></span><span></span>
+      </button>
+      <a class="brand" href="#inicio">LUMAR</a>
+      <nav class="site-nav" id="site-nav" aria-label="Principal">
+        <a href="#tienda">Tienda</a>
+        <a href="#crea-tu-vela">Crea tu vela</a>
+        <a href="#combos">Combos</a>
+        <a href="#por-que">Por qué LUMAR</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <button class="cart-btn" type="button" aria-label="Abrir carrito" data-open-cart>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 6h15l-1.5 9h-12z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M6 6L5 3H2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="9" cy="20" r="1.2" fill="currentColor"/>
+          <circle cx="18" cy="20" r="1.2" fill="currentColor"/>
+        </svg>
+        <span class="cart-count" data-cart-count>0</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="Portada">
+      <div class="hero-media" role="img" aria-label="Velas artesanales encendidas sobre mesa de madera cálida"></div>
+      <div class="hero-content">
+        <p class="hero-brand">LUMAR Velas — Granada</p>
+        <h1>Luz cálida hecha a mano en Granada</h1>
+        <p class="hero-lead">Velas de soja aromáticas inspiradas en la Alhambra, el Albaicín y la luz andaluza.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#tienda">Ver velas</a>
+          <a class="btn btn-ghost" href="#crea-tu-vela">Crea la tuya</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section bestsellers" id="mas-vendidas" aria-labelledby="best-title">
+      <div class="section-head">
+        <p class="eyebrow">Selección LUMAR</p>
+        <h2 id="best-title">Más vendidas</h2>
+        <p>Las fragancias que más se piden desde Granada.</p>
+      </div>
+      <div class="product-grid" id="bestsellers-grid"></div>
+    </section>
+
+    <section class="section shop" id="tienda" aria-labelledby="shop-title">
+      <div class="section-head">
+        <p class="eyebrow">Tienda</p>
+        <h2 id="shop-title">Nuestras velas aromáticas</h2>
+        <p>Ocho piezas con notas naturales, cera de soja y ~40 h de combustión.</p>
+      </div>
+
+      <div class="shop-controls">
+        <label class="sr-only" for="search">Buscar velas</label>
+        <input id="search" type="search" placeholder="Buscar por nombre o aroma…" autocomplete="off" />
+        <div class="filter-row" role="group" aria-label="Filtrar por colección">
+          <button type="button" class="chip is-active" data-filter="todas">Todas</button>
+          <button type="button" class="chip" data-filter="relajacion">Relajación</button>
+          <button type="button" class="chip" data-filter="energia">Energía</button>
+          <button type="button" class="chip" data-filter="romanticas">Románticas</button>
+          <button type="button" class="chip" data-filter="hogar">Hogar</button>
+        </div>
+      </div>
+
+      <div class="product-grid" id="product-grid"></div>
+      <p class="empty-state" id="empty-state" hidden>No hay velas con ese criterio. Prueba otra búsqueda o colección.</p>
+    </section>
+
+    <section class="section create" id="crea-tu-vela" aria-labelledby="create-title">
+      <div class="section-head">
+        <p class="eyebrow">Personaliza</p>
+        <h2 id="create-title">Crea tu vela</h2>
+        <p>Elige aroma, color y una frase para la etiqueta. La elaboramos a mano en Granada.</p>
+      </div>
+      <form class="create-form" id="create-form">
+        <fieldset>
+          <legend>Aroma</legend>
+          <label><input type="radio" name="aroma" value="Azahar y vainilla" checked /> Azahar y vainilla</label>
+          <label><input type="radio" name="aroma" value="Lavanda y romero" /> Lavanda y romero</label>
+          <label><input type="radio" name="aroma" value="Pino y eucalipto" /> Pino y eucalipto</label>
+          <label><input type="radio" name="aroma" value="Rosa y ámbar" /> Rosa y ámbar</label>
+          <label><input type="radio" name="aroma" value="Jazmín y limón" /> Jazmín y limón</label>
+        </fieldset>
+        <fieldset>
+          <legend>Color</legend>
+          <div class="color-options">
+            <label class="color-swatch" title="Crema"><input type="radio" name="color" value="Crema" checked /><span style="--sw:#f3ebe0"></span></label>
+            <label class="color-swatch" title="Terracota"><input type="radio" name="color" value="Terracota" /><span style="--sw:#c46a45"></span></label>
+            <label class="color-swatch" title="Arena"><input type="radio" name="color" value="Arena" /><span style="--sw:#d8c3a5"></span></label>
+            <label class="color-swatch" title="Oliva suave"><input type="radio" name="color" value="Oliva suave" /><span style="--sw:#8a8f6a"></span></label>
+            <label class="color-swatch" title="Marrón cacao"><input type="radio" name="color" value="Marrón cacao" /><span style="--sw:#5c4033"></span></label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="frase">Frase en la etiqueta</label>
+          <input id="frase" name="frase" maxlength="40" placeholder="Ej. Para ti, con luz de Granada" required />
+          <small>Máximo 40 caracteres</small>
+        </div>
+        <p class="create-price">Desde <strong>24,00 €</strong> · entrega en 5–7 días</p>
+        <button class="btn btn-primary" type="submit">Añadir personalizada al carrito</button>
+      </form>
+    </section>
+
+    <section class="section combos" id="combos" aria-labelledby="combos-title">
+      <div class="section-head">
+        <p class="eyebrow">Regalos</p>
+        <h2 id="combos-title">Combos y Gift Box</h2>
+        <p>Ahorra con el 3x2 o monta una caja regalo lista para enviar.</p>
+      </div>
+      <div class="combo-layout">
+        <article class="combo-panel">
+          <h3>Combo 3x2</h3>
+          <p>Lleva tres velas de la misma colección y paga solo dos. El descuento se aplica automáticamente en el carrito.</p>
+          <ul>
+            <li>Válido en Relajación, Energía, Románticas y Hogar</li>
+            <li>La de menor precio queda gratis</li>
+          </ul>
+          <a class="btn btn-secondary" href="#tienda">Elegir velas</a>
+        </article>
+        <article class="combo-panel gift">
+          <h3>Arma tu Gift Box</h3>
+          <p>Elige 3 velas + packaging de regalo + tarjeta manuscrita.</p>
+          <form id="gift-form" class="gift-form">
+            <label>Vela 1
+              <select name="g1" id="gift-1" required></select>
+            </label>
+            <label>Vela 2
+              <select name="g2" id="gift-2" required></select>
+            </label>
+            <label>Vela 3
+              <select name="g3" id="gift-3" required></select>
+            </label>
+            <label>Mensaje en la tarjeta
+              <input name="mensaje" maxlength="80" placeholder="Feliz cumpleaños desde Granada…" required />
+            </label>
+            <p class="gift-price">Pack desde <strong>49,00 €</strong> (incluye caja y tarjeta)</p>
+            <button class="btn btn-primary" type="submit">Añadir Gift Box</button>
+          </form>
+        </article>
+      </div>
+    </section>
+
+    <section class="section why" id="por-que" aria-labelledby="why-title">
+      <div class="section-head">
+        <p class="eyebrow">Compromiso</p>
+        <h2 id="why-title">Por qué nuestras velas</h2>
+        <p>Materiales limpios, oficio local y fragancias que evocan Granada.</p>
+      </div>
+      <ul class="why-list">
+        <li>
+          <h3>Cera de soja</h3>
+          <p>Combustión limpia, vegana y respetuosa con el ambiente de tu casa.</p>
+        </li>
+        <li>
+          <h3>~40 horas</h3>
+          <p>Cada vela está pensada para acompañarte muchas veladas sin prisa.</p>
+        </li>
+        <li>
+          <h3>Hechas a mano en Granada</h3>
+          <p>Vertido artesanal en nuestro taller, una a una, con cuidado andaluz.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section testimonials" id="opiniones" aria-labelledby="reviews-title">
+      <div class="section-head">
+        <p class="eyebrow">Clientes</p>
+        <h2 id="reviews-title">Lo que dicen desde Granada</h2>
+      </div>
+      <div class="testimonial-grid">
+        <figure>
+          <blockquote>«Alhambra al Atardecer huele exactamente a azahar en el patio. Ya es mi ritual de las noches.»</blockquote>
+          <figcaption>María López · Realejo</figcaption>
+        </figure>
+        <figure>
+          <blockquote>«Regalé el Gift Box y llegó perfecto. El packaging es precioso y las velas duran de verdad.»</blockquote>
+          <figcaption>Javier Ruiz · Zaidín</figcaption>
+        </figure>
+        <figure>
+          <blockquote>«Pedí Sierra Nevada para el salón: fresco, limpio y muy Granada. Repetiré seguro.»</blockquote>
+          <figcaption>Lucía Ortega · Albaicín</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section instagram" id="instagram" aria-labelledby="ig-title">
+      <div class="section-head">
+        <p class="eyebrow">@lumarvelas</p>
+        <h2 id="ig-title">En Instagram</h2>
+        <p>Luz, texturas y rincones de Granada.</p>
+      </div>
+      <div class="ig-grid" id="ig-grid" aria-label="Galería de Instagram"></div>
+    </section>
+
+    <section class="section faq" id="faq" aria-labelledby="faq-title">
+      <div class="section-head">
+        <p class="eyebrow">Ayuda</p>
+        <h2 id="faq-title">Preguntas frecuentes</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary>¿Cuánto tarda el envío?</summary>
+          <p>Granada capital: 3,90 € en 24–48 h. Península: 5,90 € (gratis desde 45 €). Baleares: 8,90 €. Preparación en 1–2 días laborables.</p>
+        </details>
+        <details>
+          <summary>¿Cómo cuido mi vela?</summary>
+          <p>La primera vez, deja que la cera se derrita hasta el borde (2–3 h). Recorta la mecha a 5 mm. No la dejes sin vigilancia y apágala con apagavelas.</p>
+        </details>
+        <details>
+          <summary>¿Puedo devolver un pedido?</summary>
+          <p>Sí, tienes 14 días desde la recepción (RGPD y normativa de consumo España). Si el producto está sin usar y en su embalaje, te reembolsamos. Contacta por WhatsApp o email.</p>
+        </details>
+        <details>
+          <summary>¿Las velas son de soja?</summary>
+          <p>Sí. Usamos cera de soja vegetal, mechas de algodón y fragancias de grado cosmético. Sin parafina.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-brand">LUMAR Velas</p>
+        <p>Taller artesanal en Granada. Velas de soja con alma andaluza.</p>
+        <div class="footer-social">
+          <a href="https://instagram.com/lumarvelas" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://wa.me/34600000000?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20vuestras%20velas" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-title">Legal</p>
+        <button type="button" class="linkish" data-legal="aviso">Aviso Legal</button>
+        <button type="button" class="linkish" data-legal="privacidad">Política de Privacidad</button>
+        <button type="button" class="linkish" data-legal="cookies">Cookies</button>
+      </div>
+      <div>
+        <p class="footer-title">Contacto</p>
+        <p>Granada, España</p>
+        <p><a href="mailto:hola@lumarvelas.es">hola@lumarvelas.es</a></p>
+      </div>
+    </div>
+    <p class="footer-copy">© <span id="year"></span> LUMAR Velas — Granada. Todos los derechos reservados.</p>
+  </footer>
+
+  <!-- Side cart -->
+  <div class="cart-overlay" data-close-cart hidden></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Carrito" aria-hidden="true">
+    <div class="cart-head">
+      <h2>Tu carrito</h2>
+      <button type="button" class="icon-close" data-close-cart aria-label="Cerrar carrito">×</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-foot">
+      <div class="cart-row"><span>Subtotal</span><strong data-cart-subtotal>0,00 €</strong></div>
+      <div class="cart-row muted" data-combo-note hidden><span>Descuento 3x2</span><strong data-combo-discount>−0,00 €</strong></div>
+      <div class="cart-row"><span>Total</span><strong data-cart-total>0,00 €</strong></div>
+      <button type="button" class="btn btn-primary btn-block" data-open-checkout>Ir a pagar</button>
+    </div>
+  </aside>
+
+  <!-- Product modal -->
+  <div class="modal" id="product-modal" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button type="button" class="icon-close" data-close-modal aria-label="Cerrar">×</button>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Checkout modal -->
+  <div class="modal" id="checkout-modal" hidden>
+    <div class="modal-backdrop" data-close-checkout></div>
+    <div class="modal-panel checkout-panel" role="dialog" aria-modal="true" aria-labelledby="checkout-title">
+      <button type="button" class="icon-close" data-close-checkout aria-label="Cerrar">×</button>
+      <h2 id="checkout-title">Finalizar pedido</h2>
+      <form id="checkout-form" class="checkout-form">
+        <div class="field">
+          <label for="nombre">Nombre completo</label>
+          <input id="nombre" name="nombre" required autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="direccion">Dirección</label>
+          <input id="direccion" name="direccion" required autocomplete="street-address" />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="cp">Código postal</label>
+            <input id="cp" name="cp" required pattern="[0-9]{5}" inputmode="numeric" autocomplete="postal-code" />
+          </div>
+          <div class="field">
+            <label for="ciudad">Ciudad</label>
+            <input id="ciudad" name="ciudad" value="Granada" required autocomplete="address-level2" />
+          </div>
+        </div>
+        <fieldset class="shipping-fieldset">
+          <legend>Envío</legend>
+          <label><input type="radio" name="envio" value="granada" data-cost="3.90" checked /> Granada capital — 3,90 € (24–48 h)</label>
+          <label><input type="radio" name="envio" value="peninsula" data-cost="5.90" /> Península — 5,90 € (gratis desde 45 €)</label>
+          <label><input type="radio" name="envio" value="baleares" data-cost="8.90" /> Baleares — 8,90 €</label>
+        </fieldset>
+        <fieldset>
+          <legend>Pago</legend>
+          <label><input type="radio" name="pago" value="Bizum" checked /> Bizum</label>
+          <label><input type="radio" name="pago" value="Tarjeta" /> Tarjeta</label>
+          <label><input type="radio" name="pago" value="PayPal" /> PayPal</label>
+          <label><input type="radio" name="pago" value="Transferencia" /> Transferencia</label>
+        </fieldset>
+        <div class="checkout-summary">
+          <div class="cart-row"><span>Productos</span><strong data-checkout-products>0,00 €</strong></div>
+          <div class="cart-row"><span>Envío</span><strong data-checkout-shipping>3,90 €</strong></div>
+          <div class="cart-row total"><span>Total a pagar</span><strong data-checkout-total>0,00 €</strong></div>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Confirmar pedido</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Legal modal -->
+  <div class="modal" id="legal-modal" hidden>
+    <div class="modal-backdrop" data-close-legal></div>
+    <div class="modal-panel legal-panel" role="dialog" aria-modal="true" aria-labelledby="legal-title">
+      <button type="button" class="icon-close" data-close-legal aria-label="Cerrar">×</button>
+      <h2 id="legal-title"></h2>
+      <div id="legal-body" class="legal-body"></div>
+    </div>
+  </div>
+
+  <!-- Email discount popup -->
+  <div class="modal" id="email-modal" hidden>
+    <div class="modal-backdrop" data-close-email></div>
+    <div class="modal-panel email-panel" role="dialog" aria-modal="true" aria-labelledby="email-title">
+      <button type="button" class="icon-close" data-close-email aria-label="Cerrar">×</button>
+      <p class="eyebrow">Bienvenida</p>
+      <h2 id="email-title">10 % en tu primer pedido</h2>
+      <p>Déjanos tu email y te enviamos el código. Sin spam, solo luz y ofertas de Granada.</p>
+      <form id="email-form" class="email-form">
+        <label class="sr-only" for="email-discount">Email</label>
+        <input id="email-discount" type="email" name="email" required placeholder="tu@email.com" autocomplete="email" />
+        <button class="btn btn-primary btn-block" type="submit">Quiero mi 10 %</button>
+      </form>
+      <p class="fineprint">Al suscribirte aceptas la Política de Privacidad.</p>
+    </div>
+  </div>
+
+  <!-- Order success -->
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <a class="whatsapp-float" id="whatsapp-float" href="https://wa.me/34600000000?text=Hola%2C%20quiero%20pedir%20informaci%C3%B3n%20sobre%20vuestras%20velas" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+    <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M16.1 3C9.4 3 4 8.3 4 14.9c0 2.1.6 4.1 1.6 5.9L4 29l8.4-1.6c1.7.9 3.6 1.4 5.6 1.4 6.7 0 12.1-5.3 12.1-11.9S22.8 3 16.1 3zm0 21.7c-1.7 0-3.4-.5-4.8-1.3l-.3-.2-5 1 1-4.8-.2-.3c-1-1.5-1.5-3.2-1.5-5 0-5.3 4.4-9.6 9.8-9.6s9.8 4.3 9.8 9.6-4.4 9.6-9.8 9.6zm5.4-7.2c-.3-.1-1.7-.8-2-.9s-.5-.1-.7.1c-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-1-.9-1.5-1.8-1.7-2.1-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.7-1.6-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3 0-.1-.3-.2-.6-.3z"/></svg>
+  </a>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

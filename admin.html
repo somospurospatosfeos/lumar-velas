@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — LUMAR Velas</title>
+  <style>
+    :root {
+      --cream: #f7f1e8;
+      --brown: #3d2a1f;
+      --terracotta: #c45c38;
+      --muted: #7a6556;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--brown);
+      line-height: 1.45;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(61,42,31,.12);
+      background: #fffdf9;
+    }
+    h1, h2 { margin: 0 0 .75rem; font-weight: 650; }
+    main { max-width: 1100px; margin: 0 auto; padding: 1.25rem; display: grid; gap: 1.5rem; }
+    .card {
+      background: #fffdf9;
+      border: 1px solid rgba(61,42,31,.1);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+    }
+    .stats { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .stat { min-width: 140px; }
+    .stat strong { display: block; font-size: 1.4rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th, td { text-align: left; padding: .55rem .4rem; border-bottom: 1px solid rgba(61,42,31,.1); vertical-align: top; }
+    input, select, button {
+      font: inherit;
+      padding: .45rem .6rem;
+      border-radius: 8px;
+      border: 1px solid rgba(61,42,31,.2);
+      background: white;
+    }
+    button {
+      background: var(--terracotta);
+      color: white;
+      border-color: var(--terracotta);
+      cursor: pointer;
+    }
+    button.secondary { background: var(--brown); border-color: var(--brown); }
+    button.ghost { background: transparent; color: var(--brown); }
+    #login-view { max-width: 360px; margin: 4rem auto; }
+    .field { display: grid; gap: .35rem; margin-bottom: .85rem; }
+    .muted { color: var(--muted); }
+    .error { color: #a3482c; margin: .5rem 0 0; }
+    .row-actions { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; }
+    .stock-input { width: 72px; }
+  </style>
+</head>
+<body>
+  <div id="login-view" class="card">
+    <h1>Admin LUMAR</h1>
+    <p class="muted">Acceso protegido para gestión de pedidos y stock.</p>
+    <form id="login-form">
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <input id="password" type="password" required autocomplete="current-password" />
+      </div>
+      <button type="submit">Entrar</button>
+      <p id="login-error" class="error" hidden></p>
+    </form>
+  </div>
+
+  <div id="app-view" hidden>
+    <header>
+      <div>
+        <strong>LUMAR Velas — Admin</strong>
+        <div class="muted" id="stripe-note"></div>
+      </div>
+      <button type="button" class="ghost" id="logout-btn">Salir</button>
+    </header>
+    <main>
+      <section class="card stats">
+        <div class="stat">
+          <span class="muted">Total vendido</span>
+          <strong id="total-vendido">0,00 €</strong>
+        </div>
+        <div class="stat">
+          <span class="muted">Pedidos</span>
+          <strong id="pedidos-count">0</strong>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Pedidos</h2>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Nº</th>
+                <th>Cliente</th>
+                <th>Total</th>
+                <th>Pago</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="pedidos-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Stock</h2>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Colección</th>
+                <th>Precio</th>
+                <th>Stock</th>
+              </tr>
+            </thead>
+            <tbody id="stock-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const euro = (n) => new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(Number(n) || 0);
+    const loginView = document.getElementById("login-view");
+    const appView = document.getElementById("app-view");
+    const loginForm = document.getElementById("login-form");
+    const loginError = document.getElementById("login-error");
+
+    async function api(url, options = {}) {
+      const res = await fetch(url, {
+        credentials: "include",
+        headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+        ...options,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Error de API");
+      return data;
+    }
+
+    function showApp() {
+      loginView.hidden = true;
+      appView.hidden = false;
+      loadResumen();
+    }
+
+    async function loadResumen() {
+      const data = await api("/api/admin/resumen");
+      document.getElementById("total-vendido").textContent = euro(data.total_vendido);
+      document.getElementById("pedidos-count").textContent = String(data.pedidos.length);
+
+      const pedidosBody = document.getElementById("pedidos-body");
+      pedidosBody.innerHTML = data.pedidos.map((p) => `
+        <tr>
+          <td><strong>${p.numero}</strong></td>
+          <td>${escapeHtml(p.nombre)}<br><span class="muted">${escapeHtml(p.email)} · ${escapeHtml(p.ciudad)}</span></td>
+          <td>${euro(p.total)}</td>
+          <td>${escapeHtml(p.pago)}${p.pago_stripe ? `<br><span class="muted">${escapeHtml(p.pago_stripe)}</span>` : ""}</td>
+          <td>
+            <div class="row-actions">
+              <select data-estado="${p.id}">
+                <option value="pendiente" ${p.estado === "pendiente" ? "selected" : ""}>pendiente</option>
+                <option value="enviado" ${p.estado === "enviado" ? "selected" : ""}>enviado</option>
+                <option value="entregado" ${p.estado === "entregado" ? "selected" : ""}>entregado</option>
+              </select>
+            </div>
+          </td>
+          <td>${new Date(p.creado_en).toLocaleString("es-ES")}</td>
+        </tr>
+      `).join("") || `<tr><td colspan="6" class="muted">Aún no hay pedidos</td></tr>`;
+
+      pedidosBody.querySelectorAll("select[data-estado]").forEach((sel) => {
+        sel.addEventListener("change", async () => {
+          try {
+            await api(`/api/admin/pedidos/${sel.dataset.estado}/estado`, {
+              method: "PATCH",
+              body: JSON.stringify({ estado: sel.value }),
+            });
+          } catch (err) {
+            alert(err.message);
+            loadResumen();
+          }
+        });
+      });
+
+      const stockBody = document.getElementById("stock-body");
+      stockBody.innerHTML = data.productos.map((p) => `
+        <tr>
+          <td>${escapeHtml(p.nombre)}</td>
+          <td>${escapeHtml(p.coleccion)}</td>
+          <td>${euro(p.precio)}</td>
+          <td>
+            <div class="row-actions">
+              <input class="stock-input" type="number" min="0" step="1" value="${p.stock}" data-stock-id="${p.id}" />
+              <button type="button" class="secondary" data-save-stock="${p.id}">Guardar</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+
+      stockBody.querySelectorAll("[data-save-stock]").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const id = btn.dataset.saveStock;
+          const input = stockBody.querySelector(`input[data-stock-id="${id}"]`);
+          try {
+            await api(`/api/admin/productos/${id}/stock`, {
+              method: "PATCH",
+              body: JSON.stringify({ stock: Number(input.value) }),
+            });
+            btn.textContent = "OK";
+            setTimeout(() => { btn.textContent = "Guardar"; }, 900);
+          } catch (err) {
+            alert(err.message);
+          }
+        });
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loginError.hidden = true;
+      try {
+        await api("/api/admin/login", {
+          method: "POST",
+          body: JSON.stringify({ password: document.getElementById("password").value }),
+        });
+        showApp();
+      } catch (err) {
+        loginError.textContent = err.message;
+        loginError.hidden = false;
+      }
+    });
+
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+      try { await api("/api/admin/logout", { method: "POST", body: "{}" }); } catch {}
+      appView.hidden = true;
+      loginView.hidden = false;
+    });
+
+    // Auto-enter if cookie session already valid
+    api("/api/admin/resumen").then(showApp).catch(() => {});
+  </script>
+</body>
+</html>

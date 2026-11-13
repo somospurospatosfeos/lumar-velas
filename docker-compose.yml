@@ -1,0 +1,21 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      PORT: "3000"
+      PUBLIC_BASE_URL: "http://localhost:3000"
+    volumes:
+      # Código del proyecto montado para desarrollo
+      - .:/app
+      # Conservar node_modules de la imagen
+      - /app/node_modules
+      # Persistencia SQLite
+      - lumar-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  lumar-data:

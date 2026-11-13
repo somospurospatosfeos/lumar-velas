@@ -673,19 +673,76 @@
     if (e.target.name === "envio") updateCheckoutSummary();
   });
 
-  els.checkoutForm.addEventListener("submit", (e) => {
+  els.checkoutForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const data = new FormData(els.checkoutForm);
     const { total } = cartTotals();
     const ship = shippingCost(total);
     const pago = data.get("pago");
-    showToast(`Pedido recibido · ${euro(total + ship)} · ${pago}. Te escribimos pronto.`);
-    cart = [];
-    saveCart();
-    renderCart();
-    closeModal(els.checkoutModal);
-    els.checkoutForm.reset();
-    document.getElementById("ciudad").value = "Granada";
+    const submitBtn = els.checkoutForm.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Procesando…";
+    }
+
+    const payload = {
+      nombre: String(data.get("nombre") || "").trim(),
+      email: String(data.get("email") || "").trim(),
+      direccion: String(data.get("direccion") || "").trim(),
+      codigo_postal: String(data.get("cp") || "").trim(),
+      ciudad: String(data.get("ciudad") || "").trim(),
+      envio: String(data.get("envio") || ""),
+      pago: String(pago || ""),
+      items: cart.map((item) => ({
+        type: item.type,
+        productId: item.productId || null,
+        nombre: item.name,
+        precio: item.price,
+        qty: item.qty,
+        meta: item.meta || null,
+      })),
+    };
+
+    try {
+      const res = await fetch("/api/pedidos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || "No se pudo crear el pedido");
+
+      const numero = body.numero || "LUMAR-????";
+      showToast(`Pedido ${numero} · ${euro(body.total ?? total + ship)} · ${pago}. Te escribimos pronto.`);
+      cart = [];
+      saveCart();
+      renderCart();
+      closeModal(els.checkoutModal);
+      els.checkoutForm.reset();
+      document.getElementById("ciudad").value = "Granada";
+    } catch (err) {
+      // Si el backend no responde, modo demo: no rompe la tienda
+      const isNetwork =
+        err instanceof TypeError ||
+        /Failed to fetch|NetworkError|Load failed/i.test(String(err && err.message));
+      if (isNetwork) {
+        const demoNum = `DEMO-${String(Date.now()).slice(-4)}`;
+        showToast(`Modo demo · ${demoNum} · ${euro(total + ship)} · ${pago}. Backend no disponible.`);
+        cart = [];
+        saveCart();
+        renderCart();
+        closeModal(els.checkoutModal);
+        els.checkoutForm.reset();
+        document.getElementById("ciudad").value = "Granada";
+      } else {
+        showToast(err.message || "No se pudo completar el pedido");
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Confirmar pedido";
+      }
+    }
   });
 
   els.createForm.addEventListener("submit", (e) => {
